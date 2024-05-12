@@ -1,0 +1,124 @@
+m255
+K3
+13
+cModel Technology
+Z0 dC:\Users\a0418\Desktop\project\midterm
+vALU
+Z1 IXfaWRRBAi8m[Df8oWVoZz3
+Z2 V>MiAZQHbOSM4Y30b=^j=10
+Z3 dC:\Users\a0418\Desktop\project\midterm
+Z4 w1715438496
+Z5 8C:/Users/a0418/Desktop/project/midterm/ALU.v
+Z6 FC:/Users/a0418/Desktop/project/midterm/ALU.v
+L0 1
+Z7 OV;L;10.1d;51
+r1
+31
+Z8 !s90 -reportprogress|300|-work|work|C:/Users/a0418/Desktop/project/midterm/ALU.v|
+Z9 o-work work -O0
+Z10 n@a@l@u
+Z11 !s100 T1;5MQGdNhmbccTHlOU]42
+Z12 !s108 1715438504.410000
+Z13 !s107 C:/Users/a0418/Desktop/project/midterm/ALU.v|
+!i10b 1
+!s85 0
+!s101 -O0
+vALU_1bit
+Z14 !s100 g6kcio7<B<J9Zzz_DFkbD3
+Z15 IV4W>>DJT^m33JmD]`35i21
+Z16 V6hD55<j<7<fTH;hFVggGP1
+R3
+Z17 w1715437566
+Z18 8C:/Users/a0418/Desktop/project/midterm/ALU_1bit.v
+Z19 FC:/Users/a0418/Desktop/project/midterm/ALU_1bit.v
+L0 1
+R7
+r1
+31
+Z20 !s90 -reportprogress|300|-work|work|C:/Users/a0418/Desktop/project/midterm/ALU_1bit.v|
+R9
+Z21 n@a@l@u_1bit
+Z22 !s108 1715438456.323000
+Z23 !s107 C:/Users/a0418/Desktop/project/midterm/ALU_1bit.v|
+!i10b 1
+!s85 0
+!s101 -O0
+vALUControl
+Z24 !s100 n?WRJ?<=LeJP:gE:IgjaI3
+Z25 I[zc]`3RfnkjPfmZkScP?L3
+Z26 VH;T^<A@fF>zUS?_11;a282
+R3
+Z27 w1715438354
+Z28 8C:/Users/a0418/Desktop/project/midterm/ALUControl.v
+Z29 FC:/Users/a0418/Desktop/project/midterm/ALUControl.v
+L0 1
+R7
+r1
+31
+Z30 !s90 -reportprogress|300|-work|work|C:/Users/a0418/Desktop/project/midterm/ALUControl.v|
+R9
+Z31 n@a@l@u@control
+Z32 !s108 1715438454.596000
+Z33 !s107 C:/Users/a0418/Desktop/project/midterm/ALUControl.v|
+!i10b 1
+!s85 0
+!s101 -O0
+vFullAdder
+Z34 !s100 @bLTeU9`eNM?a;U0_EO_a1
+Z35 IiaFHVM0eQUz7jVfTcW0Vz2
+Z36 V5NioWL?0JJLZ_]NN]I4=90
+R3
+Z37 w1715412209
+Z38 8C:/Users/a0418/Desktop/project/midterm/FullAdder.v
+Z39 FC:/Users/a0418/Desktop/project/midterm/FullAdder.v
+L0 1
+R7
+r1
+31
+Z40 !s90 -reportprogress|300|-work|work|C:/Users/a0418/Desktop/project/midterm/FullAdder.v|
+R9
+Z41 n@full@adder
+Z42 !s108 1715438452.898000
+Z43 !s107 C:/Users/a0418/Desktop/project/midterm/FullAdder.v|
+!i10b 1
+!s85 0
+!s101 -O0
+vtest
+!i10b 1
+!s100 R_@8b=C5QY79N^J<fg[ZL2
+I2FSgHLcD0lMYj8Og=O7hj0
+Z44 Vk<3<[f=78GX=_HO53D;7>3
+R3
+w1715438672
+Z45 8C:/Users/a0418/Desktop/project/midterm/test.v
+Z46 FC:/Users/a0418/Desktop/project/midterm/test.v
+L0 2
+R7
+r1
+!s85 0
+31
+!s108 1715438676.742000
+!s107 C:/Users/a0418/Desktop/project/midterm/test.v|
+Z47 !s90 -reportprogress|300|-work|work|C:/Users/a0418/Desktop/project/midterm/test.v|
+!s101 -O0
+R9
+vTotalALU
+Z48 IeICV2A17B2ei1V7iSHDd=2
+Z49 VYn18J0A^>4]M4zWA^<;j^3
+R3
+Z50 w1715438582
+Z51 8C:/Users/a0418/Desktop/project/midterm/TotalALU.v
+Z52 FC:/Users/a0418/Desktop/project/midterm/TotalALU.v
+L0 1
+R7
+r1
+31
+Z53 !s90 -reportprogress|300|-work|work|C:/Users/a0418/Desktop/project/midterm/TotalALU.v|
+R9
+Z54 n@total@a@l@u
+!i10b 1
+Z55 !s100 1de;ezBiD2fUARJC]AHS41
+!s85 0
+Z56 !s108 1715438588.745000
+Z57 !s107 C:/Users/a0418/Desktop/project/midterm/TotalALU.v|
+!s101 -O0
