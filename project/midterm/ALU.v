@@ -10,9 +10,10 @@ module ALU(control, A, B, dataOut, reset);
   wire[31:0] sum;
   wire[31:0] carry;
   wire zero;
+  wire temp1bit;
   assign cin = control[2]; // same as Binvert
   // 32bit ALU
-  ALU_1bit ALU0(.control(control), .Ain(A[0]), .Bin(B[0]), .cin(cin), .Less(sum[31]), .result(sum[0]), .cout(carry[0]));
+  ALU_1bit ALU0(.control(control), .Ain(A[0]), .Bin(B[0]), .cin(cin), .Less(1'b0), .result(sum[0]), .cout(carry[0]));
   ALU_1bit ALU1(.control(control), .Ain(A[1]), .Bin(B[1]), .cin(carry[0]), .Less(1'b0), .result(sum[1]), .cout(carry[1]));
   ALU_1bit ALU2(.control(control), .Ain(A[2]), .Bin(B[2]), .cin(carry[1]), .Less(1'b0), .result(sum[2]), .cout(carry[2]));
   ALU_1bit ALU3(.control(control), .Ain(A[3]), .Bin(B[3]), .cin(carry[2]), .Less(1'b0), .result(sum[3]), .cout(carry[3]));
@@ -43,7 +44,6 @@ module ALU(control, A, B, dataOut, reset);
   ALU_1bit ALU28(.control(control), .Ain(A[28]), .Bin(B[28]), .cin(carry[27]), .Less(1'b0), .result(sum[28]), .cout(carry[28]));
   ALU_1bit ALU29(.control(control), .Ain(A[29]), .Bin(B[29]), .cin(carry[28]), .Less(1'b0), .result(sum[29]), .cout(carry[29]));
   ALU_1bit ALU30(.control(control), .Ain(A[30]), .Bin(B[30]), .cin(carry[29]), .Less(1'b0), .result(sum[30]), .cout(carry[30]));
-  ALU_1bit ALU31(.control(control), .Ain(A[31]), .Bin(B[31]), .cin(carry[30]), .Less(1'b0), .result(sum[31]), .cout(carry[31]));
-  ALU_1bit ALU00(.control(control), .Ain(A[0]), .Bin(B[0]), .cin(cin), .Less(sum[31]), .result(sum[0]), .cout(carry[0]));
-  assign dataOut = sum;
+  ALU_1bit ALU31(.control(control), .Ain(A[31]), .Bin(B[31]), .cin(carry[30]), .Less(1'b1), .result(sum[31]), .cout(carry[31]));
+  assign dataOut = (control == 3'b111)? {31'b0, sum[31]} : sum;
 endmodule

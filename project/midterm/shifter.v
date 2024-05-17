@@ -1,4 +1,6 @@
-module shifter(input [31:0] dataIn, input [4:0] shift, output [31:0] dataOut);
+module shifter(input [31:0] dataIn, input [4:0] amount, input select, output [31:0] dataOut);
+    wire[4:0] shift;
+    assign shift = select ? amount : 5'b00000;
     wire [31:0] stage0, stage1, stage2, stage3, stage4;
 
     assign stage0[0]  = shift[0] ? 1'b0       : dataIn[0];

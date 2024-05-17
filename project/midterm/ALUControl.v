@@ -2,8 +2,8 @@ module ALUControl( clk, Signal, SignaltoALU, SignaltoSHT, SignaltoMULTU, Signalt
   // I/O
   input clk;
   input[5:0] Signal;
-  output[5:0] SignaltoSHT, SignaltoMUX;
-  output SignaltoMULTU;
+  output[5:0] SignaltoMUX;
+  output SignaltoMULTU, SignaltoSHT;
   output[2:0] SignaltoALU;
   
   
@@ -23,7 +23,7 @@ module ALUControl( clk, Signal, SignaltoALU, SignaltoSHT, SignaltoMULTU, Signalt
                        (Signal == ADD)? 3'b010 :
                        (Signal == SUB)? 3'b110 :
                        3'b111;
-  assign SignaltoSHT = Signal;
+  assign SignaltoSHT = (Signal == SLL)? 1 : 0;
   assign SignaltoMULTU = (Signal == MULTU)? 1 : 0;
   assign SignaltoMUX = Signal;
   

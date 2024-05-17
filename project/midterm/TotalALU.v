@@ -13,8 +13,8 @@ module TotalALU(clk, rst, Signal, dataA, dataB, Output);
   parameter SLL = 6'b000000; // d0
   parameter MULTU = 6'b011001;// d25
   
-  wire[5:0] SignaltoSHT, SignaltoMUX;
-  wire SignaltoMULTU;
+  wire[5:0] SignaltoMUX;
+  wire SignaltoSHT, SignaltoMULTU;
   wire[2:0] SignaltoALU;
   wire[31:0] ALUOut, HiOut, LoOut, ShifterOut;
   wire[31:0] dataOut;
@@ -25,7 +25,7 @@ module TotalALU(clk, rst, Signal, dataA, dataB, Output);
                         .SignaltoMUX(SignaltoMUX), .SignaltoMULTU(SignaltoMULTU));
   ALU ALU(.control(SignaltoALU), .A(dataA), .B(dataB), .dataOut(ALUOut), .reset(rst));
   MULTU mult(.clk(clk), .reset(rst), .dataA(dataA), .dataB(dataB), .Signal(SignaltoMULTU), .dataOut(MulAns));
-  shifter sht(.dataIn(dataA), .shift(dataB), .dataOut(SHTOut));
+  shifter sht(.dataIn(dataA), .amount(dataB[4:0]), .select(SignaltoSHT), .dataOut(SHTOut));
   assign Output = (Signal == MULTU)? MulAns :
                   (Signal == SLL)? SHTOut : ALUOut;
 endmodule
