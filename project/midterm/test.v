@@ -32,12 +32,12 @@ module test();
 			else if ( ctrl == 6'd32 ) $write( "ADD(%d) ", ctrl );
 			else if ( ctrl == 6'd34 ) $write( "SUB(%d) ", ctrl );
 			else if ( ctrl == 6'd42 ) $write( "SLT(%d) ", ctrl );
-			else if ( ctrl == 6'd2 ) $write( "SRL(%d) ", ctrl );
-			else if ( ctrl == 6'd27 ) $write( "DIVU(%d) ", ctrl );
+			else if ( ctrl == 6'd0 ) $write( "SLL(%d) ", ctrl );
+			else if ( ctrl == 6'd25 ) $write( "MULTU(%d) ", ctrl );
 			$display( "%d%d", inputA, inputB  );
-			if ( ctrl == 32'd27 ) begin
-				#330;
-				$display( "%d: Div End\n", $time/10 );
+			if ( ctrl == 32'b11001 ) begin
+				#320;
+				$display( "%d: MULTU End\n", $time/10 );
 				
 				#10;
 				#10;
@@ -84,6 +84,6 @@ endmodule
 	ADD  : 32
 	SUB  : 34
 	SLT  : 42
-	SRL  : 02
-	DIVU : 27
+	SLL  : 00
+	MULTU : 25
 */

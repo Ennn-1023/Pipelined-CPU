@@ -13,19 +13,24 @@ module TotalALU(clk, rst, Signal, dataA, dataB, Output);
   parameter SLL = 6'b000000; // d0
   parameter MULTU = 6'b011001;// d25
   
+  parameter Hi = 6'd16;
+  parameter Lo = 6'd18;
+  
   wire[5:0] SignaltoMUX;
   wire SignaltoSHT, SignaltoMULTU;
   wire[2:0] SignaltoALU;
-  wire[31:0] ALUOut, HiOut, LoOut, ShifterOut;
+  wire[31:0] ALUOut, HiOut, LoOut, SHTOut;
   wire[31:0] dataOut;
   wire[63:0] MulAns;
-  wire[31:0] SHTOut;
-  
+  wire MultDone;
   ALUControl ALUControl(.clk(clk), .Signal(Signal), .SignaltoALU(SignaltoALU), .SignaltoSHT(SignaltoSHT), 
                         .SignaltoMUX(SignaltoMUX), .SignaltoMULTU(SignaltoMULTU));
   ALU ALU(.control(SignaltoALU), .A(dataA), .B(dataB), .dataOut(ALUOut), .reset(rst));
-  MULTU mult(.clk(clk), .reset(rst), .dataA(dataA), .dataB(dataB), .Signal(SignaltoMULTU), .dataOut(MulAns));
+  MULTU mult(.clk(clk), .reset(rst), .dataA(dataA), .dataB(dataB), .SignaltoMULTU(SignaltoMULTU), .dataOut(MulAns), .done(MultDOne));
+  HiLo HiLo(.clk(clk), .done(MultDone), .Signal(Signal), .multAns(MulAns), .HiOut(HiOut), .LoOut(LoOut), .reset(rst));
   shifter sht(.dataIn(dataA), .amount(dataB[4:0]), .select(SignaltoSHT), .dataOut(SHTOut));
-  assign Output = (Signal == MULTU)? MulAns :
-                  (Signal == SLL)? SHTOut : ALUOut;
+  assign Output = (Signal == Hi)? HiOut :
+                  (Signal == Lo)? LoOut :
+                  (Signal == SLL)? SHTOut : 
+                  ALUOut;
 endmodule
