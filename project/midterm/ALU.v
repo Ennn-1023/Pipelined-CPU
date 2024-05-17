@@ -44,6 +44,6 @@ module ALU(control, A, B, dataOut, reset);
   ALU_1bit ALU29(.control(control), .Ain(A[29]), .Bin(B[29]), .cin(carry[28]), .Less(1'b0), .result(sum[29]), .cout(carry[29]));
   ALU_1bit ALU30(.control(control), .Ain(A[30]), .Bin(B[30]), .cin(carry[29]), .Less(1'b0), .result(sum[30]), .cout(carry[30]));
   ALU_1bit ALU31(.control(control), .Ain(A[31]), .Bin(B[31]), .cin(carry[30]), .Less(1'b0), .result(sum[31]), .cout(carry[31]));
-
+  ALU_1bit ALU00(.control(control), .Ain(A[0]), .Bin(B[0]), .cin(cin), .Less(sum[31]), .result(sum[0]), .cout(carry[0]));
   assign dataOut = sum;
 endmodule
