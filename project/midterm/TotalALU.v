@@ -22,11 +22,11 @@ module TotalALU(clk, rst, Signal, dataA, dataB, Output);
   wire[31:0] ALUOut, HiOut, LoOut, SHTOut;
   wire[31:0] dataOut;
   wire[63:0] MulAns;
-  wire MultDone;
+  
   ALUControl ALUControl(.clk(clk), .Signal(Signal), .SignaltoALU(SignaltoALU), .SignaltoSHT(SignaltoSHT), 
                         .SignaltoMUX(SignaltoMUX), .SignaltoMULTU(SignaltoMULTU));
   ALU ALU(.control(SignaltoALU), .A(dataA), .B(dataB), .dataOut(ALUOut), .reset(rst));
-  MULTU mult(.clk(clk), .reset(rst), .dataA(dataA), .dataB(dataB), .SignaltoMULTU(SignaltoMULTU), .dataOut(MulAns), .done(MultDOne));
+  MULTU mult(.clk(clk), .reset(rst), .dataA(dataA), .dataB(dataB), .SignaltoMULTU(SignaltoMULTU), .dataOut(MulAns));
   HiLo HiLo(.clk(clk), .done(MultDone), .Signal(Signal), .multAns(MulAns), .HiOut(HiOut), .LoOut(LoOut), .reset(rst));
   shifter sht(.dataIn(dataA), .amount(dataB[4:0]), .select(SignaltoSHT), .dataOut(SHTOut));
   assign Output = (Signal == Hi)? HiOut :
