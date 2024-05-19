@@ -36,7 +36,7 @@ module test();
 			else if ( ctrl == 6'd25 ) $write( "MULTU(%d) ", ctrl );
 			$display( "%d%d", inputA, inputB  );
 			if ( ctrl == 32'b11001 ) begin
-				#320;
+				#330;
 				$display( "%d: MULTU End\n", $time/10 );
 				
 				#10;
