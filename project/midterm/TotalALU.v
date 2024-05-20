@@ -29,6 +29,6 @@ module TotalALU(clk, rst, Signal, dataA, dataB, Output);
   MULTU mult(.clk(clk), .reset(rst), .dataA(dataA), .dataB(dataB), .SignaltoMULTU(SignaltoMULTU), .dataOut(MulAns));
   HiLo HiLo(.clk(clk), .Signal(Signal), .multAns(MulAns), .HiOut(HiOut), .LoOut(LoOut), .reset(rst));
   shifter sht(.dataIn(dataA), .amount(dataB[4:0]), .select(SignaltoSHT), .dataOut(SHTOut));
-  MUX mux(.sel(Signal), .ALUOut(ALUOut), .HiOut(HiOut), .LoOut(LoOut), .SHTOut(SHTOut), .Output(Output));
+  MUX mux(.sel(SignaltoMUX), .ALUOut(ALUOut), .HiOut(HiOut), .LoOut(LoOut), .SHTOut(SHTOut), .Output(Output));
   
 endmodule
