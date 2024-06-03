@@ -1,0 +1,45 @@
+module ID_EXReg(
+    input clk,
+    input rst,
+    input enReg,
+    input [1:0] WBIn,
+    input [1:0] MEMIn,
+    input [3:0] EXIn,
+    input [4:0] shamt,
+    input [5:0] funct,
+    input [31:0] RD1,
+    input [31:0] RD2,
+    input [31:0] immed,
+    input [4:0] rt,
+    input [4:0] rd,
+    output reg [1:0] WBOut,
+    output reg [1:0] MEMOut,
+    output reg [3:0] EXOut,
+    output reg [4:0] shamtOut,
+    output reg [5:0] functOut,
+    output reg [31:0] RD1Out,
+    output reg [31:0] RD2Out,
+    output reg [31:0] immedOut,
+    output reg [4:0] rtOut,
+    output reg [4:0] rdOut
+);
+
+always @(posedge clk or posedge rst) begin
+    if (rst) begin
+        {WBOut, MEMOut, EXOut, shamtOut, functOut, RD1Out, RD2Out, immedOut, rtOut, rdOut} <= 0;
+    end
+    else if (enReg) begin
+        WBOut <= WBIn;
+        MEMOut <= MEMIn;
+        EXOut <= EXIn;
+        shamtOut <= shamt;
+        functOut <= funct;
+        RD1Out <= RD1;
+        RD2Out <= RD2;
+        immedOut <= immed;
+        rtOut <= rt;
+        rdOut <= rd;
+    end
+end
+
+endmodule
