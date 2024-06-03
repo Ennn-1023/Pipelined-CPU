@@ -1,15 +1,12 @@
 module MUX(sel , ALUOut, HiOut, LoOut, SHTOut, Output);
-  input[5:0] sel;
+  input[1:0] sel;
   input[31:0] ALUOut, HiOut, LoOut, SHTOut;
   output[31:0] Output;
     // define signal
-
-  parameter SLL = 6'b000000; // d0
-  parameter Hi = 6'd16;
-  parameter Lo = 6'd18;
+  wire[31:0] Output;
   
-  assign Output = (sel == SLL)? SHTOut:
-                  (sel == Hi)? HiOut:
-                  (sel == Lo)? LoOut:
-                  ALUOut;
+  assign Output = (sel == 2'b11)? SHTOut:
+                  (sel == 2'b01)? HiOut:
+                  (sel == 2'b10)? LoOut:
+                  ALUOut; // 00
 endmodule

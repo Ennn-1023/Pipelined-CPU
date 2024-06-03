@@ -1,15 +1,16 @@
-module ALU(control, A, B, dataOut, reset);
+module ALU(control, A, B, dataOut, reset, Zero);
   // I/O definition
   input[2:0] control;
   input[31:0] A, B;
   input reset;
 
   output[31:0] dataOut;
+  output Zero;
   
   wire cin;
   wire[31:0] sum;
   wire[31:0] carry;
-  wire zero;
+  wire Zero;
   wire temp1bit;
   assign cin = control[2]; // same as Binvert
   // 32bit ALU
@@ -46,4 +47,5 @@ module ALU(control, A, B, dataOut, reset);
   ALU_1bit ALU30(.control(control), .Ain(A[30]), .Bin(B[30]), .cin(carry[29]), .Less(1'b0), .result(sum[30]), .cout(carry[30]));
   ALU_1bit ALU31(.control(control), .Ain(A[31]), .Bin(B[31]), .cin(carry[30]), .Less(1'b1), .result(sum[31]), .cout(carry[31]));
   assign dataOut = (control == 3'b111)? {31'b0, sum[31]} : sum;
+  assign Zero = (dataOut == 0)? 1: 0;
 endmodule

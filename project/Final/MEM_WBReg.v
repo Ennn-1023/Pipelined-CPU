@@ -16,7 +16,11 @@ module MEM_WBReg(
 
 always @(posedge clk or posedge rst) begin
     if (rst) begin
-        {RegWrite_out, MemtoReg_out, RD_out, ALU_out, WN_out} <= 0;
+        RegWrite_out <= 1'b0;
+        MemtoReg_out <= 1'b0;
+        RD_out <= 32'b0;
+        ALU_out <= 32'b0;
+        WN_out <= 5'b0;
     end
     else if (enReg) begin
         RegWrite_out <= RegWrite_in;

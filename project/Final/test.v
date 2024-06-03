@@ -10,10 +10,10 @@ module tbPipelined();
 	initial begin
 		rst = 1'b1;
 
-		$readmemh("instr_mem.txt", CPU.InstrMem.mem_array );
-		$readmemh("data_mem.txt", CPU.DatMem.mem_array );
+		$readmemh("instr_mem.txt", CPU.instr_mem.mem_array );
+		$readmemh("data_mem.txt", CPU.data_mem.mem_array );
 
-		$readmemh("reg.txt", CPU.RegFile.file_array );
+		$readmemh("reg.txt", CPU.regFile.file_array );
 		#10;
 		rst = 1'b0;
 	end
@@ -21,7 +21,7 @@ module tbPipelined();
 	always @( posedge clk ) begin
 		$display( "%d, PC:", $time/10-1, CPU.pc );
 		if ( CPU.opcode == 6'd0 ) begin
-			$display( "%d, wd: %d", $time/10-1, CPU.rfile_wd );
+			$display( "%d, wd: %d", $time/10-1, CPU.WD_WB );
 			if ( CPU.funct == 6'd32 ) $display( "%d, ADD\n", $time/10-1 );
 			else if ( CPU.funct == 6'd34 ) $display( "%d, SUB\n", $time/10-1 );
 			else if ( CPU.funct == 6'd36 ) $display( "%d, AND\n", $time/10-1 );
@@ -46,3 +46,4 @@ module tbPipelined();
 	end
 	
 	pipelinedCPU CPU( .clk(clk), .reset(rst) );
+endmodule
