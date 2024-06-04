@@ -17,13 +17,13 @@ module ControlUnit(opcode, ALUop, RegWrite, Branch, RegDst, MemRead, MemWrite, M
       begin
         ALUop = 2'b10;
         RegDst = 1; RegWrite = 1; MemRead = 0; MemWrite = 0;
-        ALUSrc = 0; Jump = 0; Branch = 0; MemtoReg = 1'bx;
+        ALUSrc = 0; Jump = 0; Branch = 0; MemtoReg = 1'b0;
       end
       LW:
       begin
         ALUop = 2'b00; // ALU perform add
         RegDst = 1'bx; RegWrite = 1; MemRead = 1; MemWrite = 0;
-        ALUSrc = 1; Jump = 0; Branch = 0; MemtoReg = 1'bx;
+        ALUSrc = 1; Jump = 0; Branch = 0; MemtoReg = 1'b1;
       end
       SW:
       begin

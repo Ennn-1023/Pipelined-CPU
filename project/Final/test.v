@@ -21,7 +21,7 @@ module tbPipelined();
 	always @( posedge clk ) begin
 		$display( "%d, PC:", $time/10-1, CPU.pc );
 		if ( CPU.opcode == 6'd0 ) begin
-			$display( "%d, wd: %d", $time/10-1, CPU.WD_WB );
+			$display( "%d, wd: %d", $time/10-1, CPU.regWD_WB );
 			if ( CPU.funct == 6'd32 ) $display( "%d, ADD\n", $time/10-1 );
 			else if ( CPU.funct == 6'd34 ) $display( "%d, SUB\n", $time/10-1 );
 			else if ( CPU.funct == 6'd36 ) $display( "%d, AND\n", $time/10-1 );

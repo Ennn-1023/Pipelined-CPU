@@ -38,8 +38,8 @@ module ID_EXReg(
 
 always @(posedge clk or posedge rst) begin
     if (rst) begin
-        {RegWrite_out, MemtoReg_out, MemWrite_out, MemRead_out, pcOut, RegDst_out,
-         ALUSrc_out, shamtOut, functOut, RD1Out, RD2Out, immedOut, rtOut, rdOut} <= 0;
+        {RegWrite_out, MemtoReg_out, MemWrite_out, MemRead_out, pcOut, RegDst_out, ALUSrc_out,
+         Branch_out, ALUop_out, shamtOut, functOut, RD1Out, RD2Out, immedOut, rtOut, rdOut} <= 0;
     end
     else if (enReg) begin
         RegWrite_out <= RegWrite_in;
@@ -49,6 +49,7 @@ always @(posedge clk or posedge rst) begin
         Branch_out <= Branch_in;
         RegDst_out <= RegDst_in;
         ALUSrc_out <= ALUSrc_in;
+        ALUop_out <= ALUop_in;
         pcOut <= pc_incr;
         shamtOut <= shamt;
         functOut <= funct;
