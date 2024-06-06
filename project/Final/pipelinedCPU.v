@@ -30,7 +30,7 @@ module pipelinedCPU(clk, reset);
   // Control signals
   wire [31:0] ALU_EX;
   wire Branch_ctrl, Branch_ID;
-  wire RegWrite_ctrl, RegWrite_WB, RegWrite_ID, RegWrite_EX;
+  wire RegWrite_ctrl, RegWrite_ID, RegWrite_EX, RegWrite_WB;
   wire RegDst_ctrl, RegDst_ID;
   wire PCSrc;
   wire MemRead_ctrl, MemRead_ID, MemRead_EX;
@@ -39,7 +39,7 @@ module pipelinedCPU(clk, reset);
   wire ALUSrc_ctrl, ALUSrc_ID, Jump_ctrl, Jump_ID;
   wire [1:0] ALUop_ctrl;
   wire JR_signal;
-  wire [31:0] pc_incr, pc_IF, pc_ID, pc_EX;
+  wire [31:0] pc_incr, pc_IF, pc_ID;
   wire [31:0] ALUOut; // ALU output in EX stage
   // ########IF Stage#######
   // PC register
@@ -100,7 +100,7 @@ module pipelinedCPU(clk, reset);
   wire[2:0] SignaltoALU;
   wire SignaltoMULTU, SignaltoSHT, SignaltoHi, SingaltoLo;
   wire[1:0] SignaltoMUX;
-  ALUControl ALUctrl(.clk(clk), .nop(nop_toALU), .ALUop(ALUop_ID), .funct(funct_ID), .operation(SignaltoALU), .SignaltoSHT(SignaltoSHT), .JR_Signal(JR_signal),
+  ALUControl ALUctrl(.rst(reset), .nop(nop_toALU), .ALUop(ALUop_ID), .funct(funct_ID), .operation(SignaltoALU), .SignaltoSHT(SignaltoSHT), .JR_Signal(JR_signal),
                      .SignaltoHi(SignaltoHi), .SignaltoLo(SingaltoLo), .SignaltoMUX(SignaltoMUX), .SignaltoMULTU(SignaltoMULTU));
   // ALU and multiplier
   TotalALU ALU_MUL(.clk(clk), .rst(reset), .operation(SignaltoALU), .SignaltoSHT(SignaltoSHT),

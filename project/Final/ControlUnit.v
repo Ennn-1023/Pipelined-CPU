@@ -12,6 +12,7 @@ module ControlUnit(instr, ALUop, RegWrite, Branch, RegDst, MemRead, MemWrite, Me
   parameter SW = 6'd43;
   parameter BEQ = 6'd4;
 	parameter J = 6'd2;
+  parameter ANDI = 6'd12; // 0xC i-type
   
   wire [5:0] opcode;
   assign opcode = instr[31:26];
@@ -19,7 +20,7 @@ module ControlUnit(instr, ALUop, RegWrite, Branch, RegDst, MemRead, MemWrite, Me
   always@(instr) begin
     if (instr == 32'd0) begin
       nopSignal = 1;  ALUop = 2'b10;
-      RegDst = 1; RegWrite = 1; MemRead = 0; MemWrite = 0;
+      RegDst = 0; RegWrite = 0; MemRead = 0; MemWrite = 0;
       ALUSrc = 0; Jump = 0; Branch = 0; MemtoReg = 1'b0;
     end
     else begin
@@ -54,6 +55,12 @@ module ControlUnit(instr, ALUop, RegWrite, Branch, RegDst, MemRead, MemWrite, Me
           ALUop = 2'b01;
           RegDst = 1'bx; ALUSrc = 0; MemRead = 0; MemWrite = 0;
           RegWrite = 0; Jump = 1; Branch = 0; MemtoReg = 0;
+        end
+        ANDI: // ALUSrc = 1, inputB is immed
+        begin
+          ALUop = 2'b11;
+          RegDst = 1'b0; ALUSrc = 1; MemRead = 0; MemWrite = 0;
+          RegWrite = 1; Jump = 0; Branch = 0; MemtoReg = 0;
         end
         default:
         begin
