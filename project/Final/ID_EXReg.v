@@ -9,6 +9,7 @@ module ID_EXReg(
     input Branch_in,
     input RegDst_in,
     input ALUSrc_in,
+    input Jump_in,
     input [1:0] ALUop_in,
     input [31:0] pc_incr,
     input [4:0] shamt,
@@ -25,6 +26,7 @@ module ID_EXReg(
     output reg Branch_out,
     output reg RegDst_out,
     output reg ALUSrc_out,
+    output reg Jump_out,
     output reg [1:0] ALUop_out,
     output reg [31:0] pcOut,
     output reg [4:0] shamtOut,
@@ -38,7 +40,7 @@ module ID_EXReg(
 
 always @(posedge clk or posedge rst) begin
     if (rst) begin
-        {RegWrite_out, MemtoReg_out, MemWrite_out, MemRead_out, pcOut, RegDst_out, ALUSrc_out,
+        {RegWrite_out, MemtoReg_out, MemWrite_out, MemRead_out, pcOut, RegDst_out, ALUSrc_out, Jump_out,
          Branch_out, ALUop_out, shamtOut, functOut, RD1Out, RD2Out, immedOut, rtOut, rdOut} <= 0;
     end
     else if (enReg) begin
@@ -50,6 +52,7 @@ always @(posedge clk or posedge rst) begin
         RegDst_out <= RegDst_in;
         ALUSrc_out <= ALUSrc_in;
         ALUop_out <= ALUop_in;
+        Jump_out <= Jump_in;
         pcOut <= pc_incr;
         shamtOut <= shamt;
         functOut <= funct;

@@ -1,3 +1,7 @@
+// multu, mfhi, mflo
+
+// JR perform in EX stage ??
+
 module pipelinedCPU(clk, reset);
   input clk, reset;
   
@@ -33,12 +37,12 @@ module pipelinedCPU(clk, reset);
   wire MemRead_ctrl, MemRead_ID, MemRead_EX;
   wire MemWrite_ctrl, MemWrite_ID, MemWrite_EX;
   wire MemtoReg_ctrl, MemtoReg_ID, MemtoReg_EX, MemtoReg_MEM;
-  wire ALUSrc_ctrl, Jump_ctrl;
+  wire ALUSrc_ctrl, ALUSrc_ID, Jump_ctrl, Jump_ID;
   wire [1:0] ALUop_ctrl;
-
+  wire JR_signal;
   wire [31:0] pc_next, pc_incr, pc_IF, pc_ID, pc_EX, pc_addOffset;
-  wire [31:0] pc_jump, pc_branch;
-  
+  wire [31:0] pc_jump, pc_branch, pc_jump_addr;
+  wire [31:0] ALUOut; // ALU output in EX stage
   // ########IF Stage#######
   // PC register
   reg32 PC(.clk(clk), .rst(reset), .en_reg(1'b1), .d_in(pc_next), .d_out(pc));
@@ -46,7 +50,12 @@ module pipelinedCPU(clk, reset);
   add32 pcAdd4(.a(pc), .b(32'd4), .result(pc_incr));
   // Double mux for PC branch or jump
   mux2 branch_mux(.sel(PCSrc), .a(pc_incr), .b(pc_EX), .y(pc_branch));
-  mux2 jump_mux(.sel(Jump_ctrl), .a(pc_branch), .b(pc_jump), .y(pc_next));
+  // branch or jump (j & jr)
+  // JR address or jump address
+  mux2 JRmux(.sel(JR_signal), .a(pc_jump), .b(ALUOut), .y(pc_jump_addr));
+  wire jumpSignal; // j or jr
+  or(jumpSignal, Jump_ID, JR_signal); // j or jr, do jump selection , perform in EX stage
+  mux2 jump_mux(.sel(jumpSignal), .a(pc_branch), .b(pc_jump_addr), .y(pc_next));
 
   // Instruction memory, fetch instruction
   memory instr_mem(.clk(clk), .MemRead(1'b1), .MemWrite(1'b0), .wd(32'd0), .addr(pc), .rd(instr_IF));
@@ -71,7 +80,6 @@ module pipelinedCPU(clk, reset);
   wire [4:0] shamt_ID;
   wire [1:0] ALUop_ID;
   wire [4:0] rd_ID, rt_ID;
-  wire ALUSrc_ID;
     
   ID_EXReg ID_EX(.clk(clk), .rst(reset), .enReg(1'b1), .RD1(rd1), .RD1Out(RD1_ID), .RD2(rd2), .RD2Out(RD2_ID),
                  .RegWrite_in(RegWrite_ctrl), .RegWrite_out(RegWrite_ID), .MemtoReg_in(MemtoReg_ctrl),
@@ -80,15 +88,23 @@ module pipelinedCPU(clk, reset);
                  .ALUop_in(ALUop_ctrl), .ALUop_out(ALUop_ID), .pc_incr(pc_IF), .pcOut(pc_ID), .shamt(shamt), .shamtOut(shamt_ID),
                  .funct(funct), .functOut(funct_ID), .immed(immed32), .immedOut(immed_ID), .rt(rt), .rtOut(rt_ID),
                  .rd(rd), .rdOut(rd_ID), .RegDst_in(RegDst_ctrl), .RegDst_out(RegDst_ID), .ALUSrc_in(ALUSrc_ctrl),
-                 .ALUSrc_out(ALUSrc_ID));
+                 .ALUSrc_out(ALUSrc_ID), .Jump_in(Jump_ctrl), .Jump_out(Jump_ID));
   
   // ########EX Stage########
-  wire [31:0] dataB, ALUOut;
+  wire [31:0] dataB;
   wire Zero_ALU; // Receive signal from ALU
   mux2 ALU_inputB(.sel(ALUSrc_ID), .a(RD2_ID), .b(immed_ID), .y(dataB));
   // ------------shamt unimplemented
-  // ALU and Zero signal
-  TotalALU ALU_MUL(.clk(clk), .rst(reset), .funct(funct_ID), .ALUop(ALUop_ID), .dataA(RD1_ID), .dataB(dataB), .Output(ALUOut), .Zero(Zero_ALU));
+  // ALU ctrl signals
+  wire[2:0] SignaltoALU;
+  wire SignaltoMULTU, SignaltoSHT, SignaltoHi, SingaltoLo;
+  wire[1:0] SignaltoMUX;
+  ALUControl ALUctrl(.clk(clk), .ALUop(ALUop_ID), .funct(funct_ID), .operation(SignaltoALU), .SignaltoSHT(SignaltoSHT), .JR_Signal(JR_signal),
+                     .SignaltoHi(SignaltoHi), .SignaltoLo(SingaltoLo), .SignaltoMUX(SignaltoMUX), .SignaltoMULTU(SignaltoMULTU));
+  // ALU and multiplier
+  TotalALU ALU_MUL(.clk(clk), .rst(reset), .operation(SignaltoALU), .SignaltoSHT(SignaltoSHT),
+                   .SignaltoMULTU(SignaltoMULTU), .SignaltoMUX(SignaltoMUX), .dataA(RD1_ID), .dataB(dataB),
+                   .shamt(shamt_ID), .Output(ALUOut), .Zero(Zero_ALU));
   
   // Select rt or rd to be written back into reg_file
   mux2 #(5) RN2sel(.sel(RegDst_ID), .a(rt_ID), .b(rd_ID), .y(regWN_toMEM));
