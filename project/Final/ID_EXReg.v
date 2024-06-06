@@ -10,6 +10,7 @@ module ID_EXReg(
     input RegDst_in,
     input ALUSrc_in,
     input Jump_in,
+    input nop_in,
     input [1:0] ALUop_in,
     input [31:0] pc_incr,
     input [4:0] shamt,
@@ -19,6 +20,7 @@ module ID_EXReg(
     input [31:0] immed,
     input [4:0] rt,
     input [4:0] rd,
+    input [31:0] Jump_addr_in,
     output reg RegWrite_out,
     output reg MemtoReg_out,
     output reg MemRead_out,
@@ -27,6 +29,7 @@ module ID_EXReg(
     output reg RegDst_out,
     output reg ALUSrc_out,
     output reg Jump_out,
+    output reg nop_out,
     output reg [1:0] ALUop_out,
     output reg [31:0] pcOut,
     output reg [4:0] shamtOut,
@@ -35,13 +38,14 @@ module ID_EXReg(
     output reg [31:0] RD2Out,
     output reg [31:0] immedOut,
     output reg [4:0] rtOut,
-    output reg [4:0] rdOut
+    output reg [4:0] rdOut,
+    output reg [31:0] Jump_addr_out
 );
 
 always @(posedge clk or posedge rst) begin
     if (rst) begin
-        {RegWrite_out, MemtoReg_out, MemWrite_out, MemRead_out, pcOut, RegDst_out, ALUSrc_out, Jump_out,
-         Branch_out, ALUop_out, shamtOut, functOut, RD1Out, RD2Out, immedOut, rtOut, rdOut} <= 0;
+        {RegWrite_out, MemtoReg_out, MemWrite_out, MemRead_out, pcOut, RegDst_out, ALUSrc_out, Jump_out, Jump_addr_out,
+         nop_out , Branch_out, ALUop_out, shamtOut, functOut, RD1Out, RD2Out, immedOut, rtOut, rdOut} <= 0;
     end
     else if (enReg) begin
         RegWrite_out <= RegWrite_in;
@@ -53,6 +57,7 @@ always @(posedge clk or posedge rst) begin
         ALUSrc_out <= ALUSrc_in;
         ALUop_out <= ALUop_in;
         Jump_out <= Jump_in;
+        nop_out <= nop_in;
         pcOut <= pc_incr;
         shamtOut <= shamt;
         functOut <= funct;
@@ -61,6 +66,7 @@ always @(posedge clk or posedge rst) begin
         immedOut <= immed;
         rtOut <= rt;
         rdOut <= rd;
+        Jump_addr_out <= Jump_addr_in;
     end
 end
 

@@ -1,11 +1,11 @@
 // multu, mfhi, mflo
 
-// JR perform in EX stage ??
-
+// JR perform in EX stage ?? and JR_addr should be shift left 2 bit or not
 module pipelinedCPU(clk, reset);
   input clk, reset;
   
-  wire [31:0] pc, instr_IF, instr_ID;
+  wire [31:0] pc, pc_next, pc_addOffset, pc_branch, pc_jump, instr_IF, instr_ID;
+  wire [31:0] jump_addr, jump_addr_toEX;
   wire [5:0] opcode;
   wire [4:0] rs, rt, rd, shamt;
   wire [5:0] funct, funct_ID;
@@ -29,8 +29,7 @@ module pipelinedCPU(clk, reset);
   
   // Control signals
   wire [31:0] ALU_EX;
-  wire Zero_EX;
-  wire Branch_ctrl, Branch_ID, Branch_EX;
+  wire Branch_ctrl, Branch_ID;
   wire RegWrite_ctrl, RegWrite_WB, RegWrite_ID, RegWrite_EX;
   wire RegDst_ctrl, RegDst_ID;
   wire PCSrc;
@@ -40,8 +39,7 @@ module pipelinedCPU(clk, reset);
   wire ALUSrc_ctrl, ALUSrc_ID, Jump_ctrl, Jump_ID;
   wire [1:0] ALUop_ctrl;
   wire JR_signal;
-  wire [31:0] pc_next, pc_incr, pc_IF, pc_ID, pc_EX, pc_addOffset;
-  wire [31:0] pc_jump, pc_branch, pc_jump_addr;
+  wire [31:0] pc_incr, pc_IF, pc_ID, pc_EX;
   wire [31:0] ALUOut; // ALU output in EX stage
   // ########IF Stage#######
   // PC register
@@ -49,14 +47,15 @@ module pipelinedCPU(clk, reset);
   // PC increment
   add32 pcAdd4(.a(pc), .b(32'd4), .result(pc_incr));
   // Double mux for PC branch or jump
-  mux2 branch_mux(.sel(PCSrc), .a(pc_incr), .b(pc_EX), .y(pc_branch));
+  mux2 branch_mux(.sel(PCSrc), .a(pc_incr), .b(pc_addOffset), .y(pc_branch));
   // branch or jump (j & jr)
   // JR address or jump address
-  mux2 JRmux(.sel(JR_signal), .a(pc_jump), .b(ALUOut), .y(pc_jump_addr));
+  assign jump_addr = {pc_IF[31:28], jumpOffset, 2'b00}; // concat jump immed
+  mux2 JRmux(.sel(JR_signal), .a(jump_addr_toEX), .b(ALUOut), .y(pc_jump));
   wire jumpSignal; // j or jr
   or(jumpSignal, Jump_ID, JR_signal); // j or jr, do jump selection , perform in EX stage
-  mux2 jump_mux(.sel(jumpSignal), .a(pc_branch), .b(pc_jump_addr), .y(pc_next));
-
+  mux2 jump_mux(.sel(jumpSignal), .a(pc_branch), .b(pc_jump), .y(pc_next));
+  
   // Instruction memory, fetch instruction
   memory instr_mem(.clk(clk), .MemRead(1'b1), .MemWrite(1'b0), .wd(32'd0), .addr(pc), .rd(instr_IF));
   
@@ -65,9 +64,10 @@ module pipelinedCPU(clk, reset);
   IF_IDReg IF_ID(.clk(clk), .rst(reset), .enReg(1'b1), .pcIn(pc_incr), .insIn(instr_IF), .pcOut(pc_IF), .insOut(instr_ID));
   
   /// ########ID Stage########
-  ControlUnit ctrl(.opcode(opcode), .ALUop(ALUop_ctrl), .RegWrite(RegWrite_ctrl), .Branch(Branch_ctrl), 
+  wire nop_ctrl;
+  ControlUnit ctrl(.instr(instr_ID), .ALUop(ALUop_ctrl), .RegWrite(RegWrite_ctrl), .Branch(Branch_ctrl), 
                    .MemRead(MemRead_ctrl), .MemWrite(MemWrite_ctrl), .MemtoReg(MemtoReg_ctrl), .ALUSrc(ALUSrc_ctrl), 
-                   .RegDst(RegDst_ctrl), .Jump(Jump_ctrl));
+                   .RegDst(RegDst_ctrl), .Jump(Jump_ctrl), .nopSignal(nop_ctrl));
   
   reg_file regFile(.clk(clk), .RegWrite(RegWrite_WB), .RN1(rs), .RN2(rt),
                    .WN(regWN_WB), .WD(regWD_WB), .RD1(rd1), .RD2(rd2));
@@ -80,7 +80,7 @@ module pipelinedCPU(clk, reset);
   wire [4:0] shamt_ID;
   wire [1:0] ALUop_ID;
   wire [4:0] rd_ID, rt_ID;
-    
+  wire nop_toALU;
   ID_EXReg ID_EX(.clk(clk), .rst(reset), .enReg(1'b1), .RD1(rd1), .RD1Out(RD1_ID), .RD2(rd2), .RD2Out(RD2_ID),
                  .RegWrite_in(RegWrite_ctrl), .RegWrite_out(RegWrite_ID), .MemtoReg_in(MemtoReg_ctrl),
                  .MemtoReg_out(MemtoReg_ID), .MemWrite_in(MemWrite_ctrl), .MemWrite_out(MemWrite_ID),
@@ -88,7 +88,8 @@ module pipelinedCPU(clk, reset);
                  .ALUop_in(ALUop_ctrl), .ALUop_out(ALUop_ID), .pc_incr(pc_IF), .pcOut(pc_ID), .shamt(shamt), .shamtOut(shamt_ID),
                  .funct(funct), .functOut(funct_ID), .immed(immed32), .immedOut(immed_ID), .rt(rt), .rtOut(rt_ID),
                  .rd(rd), .rdOut(rd_ID), .RegDst_in(RegDst_ctrl), .RegDst_out(RegDst_ID), .ALUSrc_in(ALUSrc_ctrl),
-                 .ALUSrc_out(ALUSrc_ID), .Jump_in(Jump_ctrl), .Jump_out(Jump_ID));
+                 .ALUSrc_out(ALUSrc_ID), .Jump_in(Jump_ctrl), .Jump_out(Jump_ID), .nop_in(nop_ctrl), .nop_out(nop_toALU),
+                 .Jump_addr_in(jump_addr), .Jump_addr_out(jump_addr_toEX));
   
   // ########EX Stage########
   wire [31:0] dataB;
@@ -99,7 +100,7 @@ module pipelinedCPU(clk, reset);
   wire[2:0] SignaltoALU;
   wire SignaltoMULTU, SignaltoSHT, SignaltoHi, SingaltoLo;
   wire[1:0] SignaltoMUX;
-  ALUControl ALUctrl(.clk(clk), .ALUop(ALUop_ID), .funct(funct_ID), .operation(SignaltoALU), .SignaltoSHT(SignaltoSHT), .JR_Signal(JR_signal),
+  ALUControl ALUctrl(.clk(clk), .nop(nop_toALU), .ALUop(ALUop_ID), .funct(funct_ID), .operation(SignaltoALU), .SignaltoSHT(SignaltoSHT), .JR_Signal(JR_signal),
                      .SignaltoHi(SignaltoHi), .SignaltoLo(SingaltoLo), .SignaltoMUX(SignaltoMUX), .SignaltoMULTU(SignaltoMULTU));
   // ALU and multiplier
   TotalALU ALU_MUL(.clk(clk), .rst(reset), .operation(SignaltoALU), .SignaltoSHT(SignaltoSHT),
@@ -118,9 +119,8 @@ module pipelinedCPU(clk, reset);
   
   EX_MEMReg EX_MEM(.clk(clk), .rst(reset), .enReg(1'b1), .RegWrite_in(RegWrite_ID), .RegWrite_out(RegWrite_EX),
                    .MemtoReg_in(MemtoReg_ID), .MemtoReg_out(MemtoReg_EX), .MemWrite_in(MemWrite_ID), .MemWrite_out(MemWrite_EX),
-                   .MemRead_in(MemRead_ID), .MemRead_out(MemRead_EX), .Branch_in(Branch_ID), .Branch_out(Branch_EX),
-                   .Zero_in(Zero_ALU), .Zero_out(Zero_EX), .pc_in(pc_addOffset), .pc_out(pc_EX), .ALU_in(ALUOut), .ALU_out(ALU_EX),
-                   .WD_in(RD2_ID), .WD_out(regWD_EX), .WN_in(regWN_toMEM), .WN_out(regWN_EX));
+                   .MemRead_in(MemRead_ID), .MemRead_out(MemRead_EX), .ALU_in(ALUOut),
+                   .ALU_out(ALU_EX), .WD_in(RD2_ID), .WD_out(regWD_EX), .WN_in(regWN_toMEM), .WN_out(regWN_EX));
   
   // ###########MEM Stage############
   wire [31:0] MemRD;
@@ -128,7 +128,7 @@ module pipelinedCPU(clk, reset);
   
   // Setting PCSrc for beq
   // PCSrc = Branch & Zero
-  and (PCSrc, Branch_EX, Zero_EX);
+  and (PCSrc, Branch_ID, Zero_ALU);
   
   wire [31:0] RD_MEM, ALU_MEM;
   // ########End of MEM Stage########
