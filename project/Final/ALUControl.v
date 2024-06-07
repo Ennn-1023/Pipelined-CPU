@@ -6,8 +6,6 @@ module ALUControl(
   output reg [1:0] SignaltoMUX,
   output reg SignaltoMULTU,
   output reg SignaltoSHT,
-  output reg SignaltoHi,
-  output reg SignaltoLo,
   output reg JR_Signal,
   output reg [2:0] operation
 );
@@ -31,8 +29,6 @@ module ALUControl(
       SignaltoMULTU = 0;
       SignaltoSHT = 0;
       SignaltoMUX = 2'b00;
-      SignaltoHi = 0;
-      SignaltoLo = 0;
       operation = 3'b000; // No operation
     end
     else begin
@@ -41,16 +37,12 @@ module ALUControl(
         // If NOP signal is active, set all control signals to no operation
         SignaltoSHT = 0;
         SignaltoMUX = 2'b00;
-        SignaltoHi = 0;
-        SignaltoLo = 0;
         operation = 3'b000; // No operation
       end
       else begin
         // Default values for control signals
        	SignaltoSHT = 0;
         SignaltoMUX = 2'b00;
-        SignaltoHi = 0;
-        SignaltoLo = 0;
         // Determine ALU operation based on ALUop and funct
         case(ALUop)
           2'b00 : operation = 3'b010; // Load/Store

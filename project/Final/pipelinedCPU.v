@@ -98,10 +98,10 @@ module pipelinedCPU(clk, reset);
   // ------------shamt unimplemented
   // ALU ctrl signals
   wire[2:0] SignaltoALU;
-  wire SignaltoMULTU, SignaltoSHT, SignaltoHi, SingaltoLo;
+  wire SignaltoMULTU, SignaltoSHT;
   wire[1:0] SignaltoMUX;
   ALUControl ALUctrl(.rst(reset), .nop(nop_toALU), .ALUop(ALUop_ID), .funct(funct_ID), .operation(SignaltoALU), .SignaltoSHT(SignaltoSHT), .JR_Signal(JR_signal),
-                     .SignaltoHi(SignaltoHi), .SignaltoLo(SingaltoLo), .SignaltoMUX(SignaltoMUX), .SignaltoMULTU(SignaltoMULTU));
+                     .SignaltoMUX(SignaltoMUX), .SignaltoMULTU(SignaltoMULTU));
   // ALU and multiplier
   TotalALU ALU_MUL(.clk(clk), .rst(reset), .operation(SignaltoALU), .SignaltoSHT(SignaltoSHT),
                    .SignaltoMULTU(SignaltoMULTU), .SignaltoMUX(SignaltoMUX), .dataA(RD1_ID), .dataB(dataB),
