@@ -34,8 +34,8 @@ module tbPipelined();
 			end
 			else if ( CPU.funct == 6'd42 ) $display( "%d, SLT\n", $time/10-1 );
 			else if ( CPU.funct == 6'd25 ) $display( "%d, MULTU\n", $time/10-1 );
-			else if ( CPU.funct == 6'd10 ) $display( "%d, MFHI\n", $time/10-1 );
-			else if ( CPU.funct == 6'd12 ) $display( "%d, MFLO\n", $time/10-1 );
+			else if ( CPU.funct == 6'd16 ) $display( "%d, MFHI\n", $time/10-1 );
+			else if ( CPU.funct == 6'd18 ) $display( "%d, MFLO\n", $time/10-1 );
 			else if ( CPU.funct == 6'd8 ) $display( "%d, JR\n", $time/10-1 );
 		end
 		else if ( CPU.opcode == 6'd12 ) $display( "%d, ANDI\n", $time/10-1 );

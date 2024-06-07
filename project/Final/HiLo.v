@@ -6,11 +6,11 @@ input [63:0] multAns ;
 output [31:0] HiOut, LoOut ;
 
 reg [31:0] HiReg, LoReg ;
-
+wire [31:0] HiOut, LoOut;
 parameter Hi = 6'd16;
 parameter Lo = 6'd18;
 
-always@( posedge clk or reset )
+always@( multAns or reset )
 begin
   if ( reset )
   begin
