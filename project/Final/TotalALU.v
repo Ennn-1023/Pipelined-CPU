@@ -1,12 +1,10 @@
 module TotalALU(clk, rst, operation, SignaltoMULTU, SignaltoSHT, SignaltoMUX,
-                SignaltoHi, SignaltoLo,dataA, dataB, shamt, Output, Zero);
+                dataA, dataB, shamt, Output, Zero);
   input clk, rst;
   input[2:0] operation;
   input[1:0] SignaltoMUX;
   input SignaltoMULTU;
   input SignaltoSHT;
-  input SignaltoHi;
-  input SignaltoLo;
   input[31:0] dataA, dataB;
   input [4:0] shamt;
   output[31:0] Output;
@@ -31,7 +29,7 @@ module TotalALU(clk, rst, operation, SignaltoMULTU, SignaltoSHT, SignaltoMUX,
   
   ALU ALU(.control(operation), .A(dataA), .B(dataB), .dataOut(ALUOut), .reset(rst), .Zero(Zero));
   MULTU mult(.clk(clk), .reset(rst), .dataA(dataA), .dataB(dataB), .SignaltoMULTU(SignaltoMULTU), .dataOut(MulAns));
-  HiLo HiLo(.clk(clk), .Signal(funct), .multAns(MulAns), .HiOut(HiOut), .LoOut(LoOut), .reset(rst));
+  HiLo HiLo(.clk(clk), .multAns(MulAns), .HiOut(HiOut), .LoOut(LoOut), .reset(rst));
   // sll input : rt(dataB) shift left shamt-bits
   shifter sht(.dataIn(dataB), .amount(shamt), .select(SignaltoSHT), .dataOut(SHTOut));
   MUX mux(.sel(SignaltoMUX), .ALUOut(ALUOut), .HiOut(HiOut), .LoOut(LoOut), .SHTOut(SHTOut), .Output(Output));

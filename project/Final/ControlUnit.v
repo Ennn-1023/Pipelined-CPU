@@ -35,7 +35,7 @@ module ControlUnit(instr, ALUop, RegWrite, Branch, RegDst, MemRead, MemWrite, Me
         LW:
         begin
           ALUop = 2'b00; // ALU perform add
-          RegDst = 1'bx; RegWrite = 1; MemRead = 1; MemWrite = 0;
+          RegDst = 1'b0; RegWrite = 1; MemRead = 1; MemWrite = 0;
           ALUSrc = 1; Jump = 0; Branch = 0; MemtoReg = 1'b1;
         end
         SW:

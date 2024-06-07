@@ -55,12 +55,10 @@ module ALUControl(
             end
             else SignaltoMULTU = 0;
             
-            if (funct == Hi) begin
-              SignaltoHi = 1; SignaltoMUX = 2'b01;
-            end
-            else if (funct == Lo) begin
-              SignaltoLo = 1; SignaltoMUX = 2'b10;
-            end 
+            if (funct == Hi)
+              SignaltoMUX = 2'b01;
+            else if (funct == Lo)
+              SignaltoMUX = 2'b10;
             else begin
               case(funct)
                 AND : operation = 3'b000;

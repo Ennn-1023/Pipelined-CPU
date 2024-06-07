@@ -1,6 +1,5 @@
-module HiLo( clk, Signal, multAns, HiOut, LoOut, reset );
+module HiLo( clk, multAns, HiOut, LoOut, reset );
 input clk;
-input [5:0] Signal ;
 input reset ;
 input [63:0] multAns ;
 output [31:0] HiOut, LoOut ;
