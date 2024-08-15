@@ -6,5 +6,4 @@
 4. Integer Multiply/Divide: multu 
 5. Other Instructions: mfhi, mflo, nop
 ## 架構圖
-![image](https://hackmd.io/_uploads/B1Qhb5j5A.png)
-
+![image](https://github.com/user-attachments/assets/fc9c9aeb-56fb-444e-bd68-db5763bd691e)
